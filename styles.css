@@ -1,0 +1,307 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a3a 50%, #0f0f23 100%);
+    min-height: 100vh;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+.header {
+    text-align: center;
+    padding: 2rem 0;
+    position: relative;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 110, 0.3), transparent);
+    animation: glow 2s ease-in-out infinite alternate;
+    z-index: 0;
+}
+
+@keyframes glow {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(255, 0, 110, 0.5);
+    position: relative;
+    z-index: 2;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.category {
+    margin-bottom: 3rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.category:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 45px rgba(131, 56, 236, 0.3);
+}
+
+.category-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    background: linear-gradient(45deg, #ff006e, #8338ec);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(255, 0, 110, 0.5);
+}
+
+.channels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.channel-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 15px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.channel-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 2px;
+    background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+    border-radius: inherit;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: subtract;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.channel-card:hover::before {
+    opacity: 1;
+}
+
+.channel-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(131, 56, 236, 0.4);
+}
+
+.channel-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.channel-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.quality-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.quality-uhd {
+    background: linear-gradient(45deg, #ff006e, #8338ec);
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 0, 110, 0.5);
+}
+
+.quality-fhd {
+    background: linear-gradient(45deg, #3a86ff, #06ffa5);
+    color: white;
+    box-shadow: 0 0 15px rgba(58, 134, 255, 0.5);
+}
+
+.quality-hd {
+    background: linear-gradient(45deg, #ffbe0b, #fb8500);
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 190, 11, 0.5);
+}
+
+.quality-sd {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    color: white;
+}
+
+.language {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.play-button {
+    background: linear-gradient(45deg, #ff006e, #8338ec);
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.play-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 0, 110, 0.6);
+}
+
+.search-container {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.search-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 25px;
+    padding: 1rem 2rem;
+    color: white;
+    font-size: 1.1rem;
+    width: 100%;
+    max-width: 400px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-input:focus {
+    border: 2px solid #ff006e;
+    box-shadow: 0 0 20px rgba(255, 0, 110, 0.3);
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #8338ec;
+}
+
+.spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 0, 110, 0.3);
+    border-radius: 50%;
+    border-top-color: #ff006e;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.player-view {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 1000;
+}
+
+.player-view.active {
+    display: block;
+}
+
+.player-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.player-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 1001;
+    transition: background 0.3s ease;
+}
+
+.back-button:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.main-view {
+    display: block;
+}
+
+.main-view.hidden {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .channels-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .container {
+        padding: 1rem;
+    }
+}

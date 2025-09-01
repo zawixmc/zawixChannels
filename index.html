@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zawixChannels</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-view" id="mainView">
+        <div class="header">
+            <h1>zawixChannels</h1>
+        </div>
+        <div class="container">
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Szukaj kanału...">
+            </div>
+
+            <div id="channelsContainer">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Ładowanie kanałów...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="player-view" id="playerView">
+        <button class="back-button" onclick="goBack()">← Powrót</button>
+        <div class="player-container" id="playerContainer">
+        </div>
+    </div>
+    <script src="channels.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
