@@ -20,49 +20,49 @@ const channelsData = {
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    5: [{
+    4: [{
         "name": "Canal+ Sport 5",
         "url": "https://thedaddy.top/embed/stream-75.php",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    8: [{
+    5: [{
         "name": "Eleven Sports 1",
         "url": "https://thedaddy.top/embed/stream-71.php",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    9: [{
+    6: [{
         "name": "Eleven Sports 2",
         "url": "https://thedaddy.top/embed/stream-72.php",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    10: [{
+    7: [{
         "name": "Eleven Sports 3",
         "url": "https://thedaddy.top/embed/stream-428.php",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    12: [{
+    8: [{
         "name": "Polsat Sport 1",
         "url": "https://thedaddy.top/embed/stream-47.php",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    13: [{
+    9: [{
         "name": "Polsat Sport 2",
         "url": "https://thedaddy.top/embed/stream-50.php",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    21: [{
+    10: [{
         "name": "TVP Sport",
         "url": "https://thedaddy.top/embed/stream-128.php",
         "country": "PL",

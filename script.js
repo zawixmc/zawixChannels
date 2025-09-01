@@ -52,29 +52,56 @@ function showPlayer(url, channelName) {
     mainView.classList.add('hidden');
     playerView.classList.add('active');
     
-    // Różne sposoby ładowania w zależności od URL
+    // Usunięcie restrykcyjnych atrybutów sandbox dla linków z thedaddy.top
     let iframeHtml = '';
     
     if (url.includes('thedaddy.top')) {
-        // Dla linków z thedaddy.top - próba z różnymi parametrami
+        // Wersja bez sandbox - bardziej permisywna
+        iframeHtml = `
+            <iframe 
+                src="${url}" 
+                allowfullscreen 
+                frameborder="0"
+                allow="autoplay; encrypted-media; fullscreen; payment; geolocation; microphone; camera"
+                referrerpolicy="no-referrer-when-downgrade"
+                style="width: 100%; height: 100%; border: none;"
+                loading="lazy">
+            </iframe>
+        `;
+    } else {
+        // Dla innych linków standardowe iframe
         iframeHtml = `
             <iframe 
                 src="${url}" 
                 allowfullscreen 
                 frameborder="0"
                 allow="autoplay; encrypted-media; fullscreen"
-                referrerpolicy="no-referrer-when-downgrade"
-                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-presentation"
                 style="width: 100%; height: 100%; border: none;">
             </iframe>
         `;
-    } else {
-        // Dla innych linków standardowe iframe
-        iframeHtml = `<iframe src="${url}" allowfullscreen frameborder="0"></iframe>`;
     }
     
     playerContainer.innerHTML = iframeHtml;
     document.title = `${channelName} - zawixChannels`;
+    
+    // Dodanie obsługi błędów ładowania iframe
+    const iframe = playerContainer.querySelector('iframe');
+    iframe.addEventListener('error', function() {
+        console.log('Błąd ładowania iframe, próba otwarcia w nowym oknie...');
+        openInNewWindow(url, channelName);
+    });
+    
+    // Sprawdzenie czy iframe się załadował po 3 sekundach
+    setTimeout(() => {
+        try {
+            if (!iframe.contentDocument && !iframe.contentWindow) {
+                console.log('Iframe nie załadował się poprawnie, otwieranie w nowym oknie...');
+                openInNewWindow(url, channelName);
+            }
+        } catch (e) {
+            // Ignoruj błędy CORS - to znaczy że iframe prawdopodobnie działa
+        }
+    }, 3000);
 }
 
 function goBack() {
@@ -170,24 +197,53 @@ function filterChannels() {
     renderChannels(filtered);
 }
 
-// Funkcja do otwierania linku w nowym oknie jako fallback
+// Ulepszona funkcja do otwierania w nowym oknie
 function openInNewWindow(url, channelName) {
-    const newWindow = window.open('', '_blank', 'width=1920,height=1080');
-    newWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>${channelName}</title>
-            <style>
-                body { margin: 0; padding: 0; background: #000; }
-                iframe { width: 100vw; height: 100vh; border: none; }
-            </style>
-        </head>
-        <body>
-            <iframe src="${url}" allowfullscreen></iframe>
-        </body>
-        </html>
-    `);
+    const newWindow = window.open('', '_blank', 'width=1920,height=1080,scrollbars=yes,resizable=yes');
+    if (newWindow) {
+        newWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>${channelName}</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body { 
+                        background: #000; 
+                        overflow: hidden; 
+                        font-family: Arial, sans-serif;
+                    }
+                    iframe { 
+                        width: 100vw; 
+                        height: 100vh; 
+                        border: none; 
+                        display: block;
+                    }
+                    .error-msg {
+                        color: white;
+                        text-align: center;
+                        padding: 20px;
+                        font-size: 18px;
+                    }
+                </style>
+            </head>
+            <body>
+                <iframe 
+                    src="${url}" 
+                    allowfullscreen
+                    allow="autoplay; encrypted-media; fullscreen; payment; geolocation; microphone; camera"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    onerror="document.body.innerHTML='<div class=&quot;error-msg&quot;>Błąd ładowania strumienia. Spróbuj odświeżyć stronę.</div>'">
+                </iframe>
+            </body>
+            </html>
+        `);
+        newWindow.document.close();
+    } else {
+        alert('Zablokowano wyskakujące okno. Proszę pozwolić na wyskakujące okna dla tej strony.');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
