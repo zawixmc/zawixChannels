@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="expiry-notice">
+        Data wygaśnięcia: 14.09.2025 23:59 UTC+1
+    </div>
+    
     <div class="main-view" id="mainView">
         <div class="header">
             <h1>zawixChannels</h1>
@@ -15,7 +19,6 @@
             <div class="search-container">
                 <input type="text" class="search-input" id="searchInput" placeholder="Szukaj kanału...">
             </div>
-
             <div id="channelsContainer">
                 <div class="loading">
                     <div class="spinner"></div>
@@ -25,7 +28,7 @@
         </div>
     </div>
     <div class="player-view" id="playerView">
-        <button class="back-button" onclick="goBack()">← Powrót</button>
+        <button class="back-button" onclick="goBack()">← WRÓĆ</button>
         <div class="player-container" id="playerContainer">
         </div>
     </div>

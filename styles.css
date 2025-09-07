@@ -292,6 +292,49 @@ h1 {
     display: none;
 }
 
+.expiry-notice {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    background: linear-gradient(135deg, #e91e63, #f06292);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(233, 30, 99, 0.3);
+    z-index: 9999;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    user-select: none;
+    letter-spacing: 0.5px;
+}
+
+.expiry-notice:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+}
+
+@media (max-width: 768px) {
+    .expiry-notice {
+        font-size: 10px;
+        padding: 6px 12px;
+        top: 10px;
+        right: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .expiry-notice {
+        font-size: 9px;
+        padding: 5px 10px;
+        top: 8px;
+        right: 10px;
+    }
+}
+
 @media (max-width: 768px) {
     .channels-grid {
         grid-template-columns: 1fr;
