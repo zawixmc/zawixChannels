@@ -106,7 +106,7 @@ const channelsData = {
     }],
     16: [{
         "name": "TVP Sport",
-        "url": "https://thedaddy.top/embed/stream-128.php",
+        "url": "https://1.zhdcdn.zip/strumyk.php?a=32",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"

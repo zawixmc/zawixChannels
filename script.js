@@ -52,46 +52,25 @@ function showPlayer(url, channelName) {
     mainView.classList.add('hidden');
     playerView.classList.add('active');
     
-    // Usunięcie restrykcyjnych atrybutów sandbox dla linków z thedaddy.top
-    let iframeHtml = '';
-    
-    if (url.includes('thedaddy.top')) {
-        // Wersja bez sandbox - bardziej permisywna
-        iframeHtml = `
-            <iframe 
-                src="${url}" 
-                allowfullscreen 
-                frameborder="0"
-                allow="autoplay; encrypted-media; fullscreen; payment; geolocation; microphone; camera"
-                referrerpolicy="no-referrer-when-downgrade"
-                style="width: 100%; height: 100%; border: none;"
-                loading="lazy">
-            </iframe>
-        `;
-    } else {
-        // Dla innych linków standardowe iframe
-        iframeHtml = `
-            <iframe 
-                src="${url}" 
-                allowfullscreen 
-                frameborder="0"
-                allow="autoplay; encrypted-media; fullscreen"
-                style="width: 100%; height: 100%; border: none;">
-            </iframe>
-        `;
-    }
+    const iframeHtml = `
+        <iframe 
+            src="${url}" 
+            allowfullscreen 
+            frameborder="0"
+            allow="autoplay; encrypted-media; fullscreen"
+            style="width: 100%; height: 100%; border: none;">
+        </iframe>
+    `;
     
     playerContainer.innerHTML = iframeHtml;
     document.title = `${channelName} - zawixChannels`;
     
-    // Dodanie obsługi błędów ładowania iframe
     const iframe = playerContainer.querySelector('iframe');
     iframe.addEventListener('error', function() {
         console.log('Błąd ładowania iframe, próba otwarcia w nowym oknie...');
         openInNewWindow(url, channelName);
     });
     
-    // Sprawdzenie czy iframe się załadował po 3 sekundach
     setTimeout(() => {
         try {
             if (!iframe.contentDocument && !iframe.contentWindow) {
@@ -99,7 +78,6 @@ function showPlayer(url, channelName) {
                 openInNewWindow(url, channelName);
             }
         } catch (e) {
-            // Ignoruj błędy CORS - to znaczy że iframe prawdopodobnie działa
         }
     }, 3000);
 }
@@ -197,7 +175,6 @@ function filterChannels() {
     renderChannels(filtered);
 }
 
-// Ulepszona funkcja do otwierania w nowym oknie
 function openInNewWindow(url, channelName) {
     const newWindow = window.open('', '_blank', 'width=1920,height=1080,scrollbars=yes,resizable=yes');
     if (newWindow) {
