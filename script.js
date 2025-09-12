@@ -11,6 +11,68 @@ let currentChannelSource = 'channels.js';
 
 const adLink = 'https://www.revenuecpmgate.com/edh6fisc?key=0c99a1d5fe8ce628e3dcaa38ebc0d01b';
 
+const EXPIRY_DATE = new Date('2025-09-14T23:59:59');
+
+function checkExpiry() {
+    const now = new Date();
+    if (now > EXPIRY_DATE) {
+        document.body.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: linear-gradient(45deg, #1a1a1a, #2d2d2d);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 999999;
+                color: #ff4444;
+                font-family: Arial, sans-serif;
+                text-align: center;
+            ">
+                <div style="
+                    background: rgba(255, 68, 68, 0.1);
+                    border: 2px solid #ff4444;
+                    border-radius: 20px;
+                    padding: 40px;
+                    max-width: 600px;
+                    box-shadow: 0 0 50px rgba(255, 68, 68, 0.3);
+                    animation: pulse 2s infinite;
+                ">
+                    <h1 style="
+                        font-size: 48px;
+                        margin: 0 0 20px 0;
+                        text-shadow: 0 0 20px #ff4444;
+                    ">⚠️ STRONA WYGASŁA</h1>
+                    <p style="
+                        font-size: 24px;
+                        margin: 0 0 20px 0;
+                        opacity: 0.9;
+                    ">Dostęp do zawixChannels wygasł dnia:</p>
+                    <p style="
+                        font-size: 32px;
+                        margin: 0;
+                        font-weight: bold;
+                        text-shadow: 0 0 10px #ff4444;
+                    ">${EXPIRY_DATE.toLocaleDateString('pl-PL')} ${EXPIRY_DATE.toLocaleTimeString('pl-PL')}</p>
+                </div>
+                <style>
+                    @keyframes pulse {
+                        0% { transform: scale(1); }
+                        50% { transform: scale(1.05); }
+                        100% { transform: scale(1); }
+                    }
+                </style>
+            </div>
+        `;
+        return true;
+    }
+    return false;
+}
+
 function initializeChannelLookup() {
     Object.entries(channelsData).forEach(([id, channelArray]) => {
         channelLookupById[id] = channelArray[0];
@@ -35,6 +97,8 @@ function categorizeChannel(channelName) {
 }
 
 function playChannel(channelId, channelName, url, event) {
+    if (checkExpiry()) return;
+    
     if (!firstClickTracker.has(channelId)) {
         firstClickTracker.add(channelId);
         window.open(adLink, '_blank');
@@ -46,6 +110,8 @@ function playChannel(channelId, channelName, url, event) {
 }
 
 function showPlayer(url, channelName) {
+    if (checkExpiry()) return;
+    
     const mainView = document.getElementById('mainView');
     const playerView = document.getElementById('playerView');
     const playerContainer = document.getElementById('playerContainer');
@@ -84,6 +150,8 @@ function showPlayer(url, channelName) {
 }
 
 function goBack() {
+    if (checkExpiry()) return;
+    
     const mainView = document.getElementById('mainView');
     const playerView = document.getElementById('playerView');
     const playerContainer = document.getElementById('playerContainer');
@@ -97,6 +165,8 @@ function goBack() {
 }
 
 function handlePopState(event) {
+    if (checkExpiry()) return;
+    
     const path = window.location.pathname;
     
     if (path === '/' || path === '') {
@@ -114,6 +184,8 @@ function handlePopState(event) {
 }
 
 function renderChannels(filteredData = null) {
+    if (checkExpiry()) return;
+    
     const container = document.getElementById('channelsContainer');
     const dataToRender = filteredData || channelsData;
     
@@ -159,6 +231,8 @@ function renderChannels(filteredData = null) {
 }
 
 function filterChannels() {
+    if (checkExpiry()) return;
+    
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     if (!searchTerm) {
         renderChannels();
@@ -177,6 +251,8 @@ function filterChannels() {
 }
 
 function openInNewWindow(url, channelName) {
+    if (checkExpiry()) return;
+    
     const newWindow = window.open('', '_blank', 'width=1920,height=1080,scrollbars=yes,resizable=yes');
     if (newWindow) {
         newWindow.document.write(`
@@ -225,6 +301,8 @@ function openInNewWindow(url, channelName) {
 }
 
 function toggleChannelSource() {
+    if (checkExpiry()) return;
+    
     const oldScript = document.getElementById('channelsScript');
     const btn = document.getElementById('altChannelsBtn');
     const container = document.getElementById('channelsContainer');
@@ -240,39 +318,49 @@ function toggleChannelSource() {
         oldScript.remove();
     }
     
-    if (typeof channelsData !== 'undefined') {
-        delete window.channelsData;
-    }
+    delete window.channelsData;
     
     const newScript = document.createElement('script');
     newScript.id = 'channelsScript';
     
     if (currentChannelSource === 'channels.js') {
-        newScript.src = 'channels-thedaddy.js';
+        newScript.src = 'channels-thedaddy.js?' + Date.now();
         btn.textContent = 'DOMYŚLNE KANAŁY';
         currentChannelSource = 'channels-thedaddy.js';
+        console.log('Ładuję: channels-thedaddy.js');
     } else {
-        newScript.src = 'channels.js';
+        newScript.src = 'channels.js?' + Date.now();
         btn.textContent = 'ALTERNATYWNE KANAŁY';
         currentChannelSource = 'channels.js';
+        console.log('Ładuję: channels.js');
     }
     
     newScript.onload = function() {
+        console.log('Script załadowany:', newScript.src);
+        console.log('channelsData:', typeof window.channelsData !== 'undefined' ? Object.keys(window.channelsData).length + ' kanałów' : 'undefined');
+        
         channelLookupById = {};
         firstClickTracker.clear();
         
         setTimeout(() => {
-            if (typeof channelsData !== 'undefined') {
+            if (typeof window.channelsData !== 'undefined') {
                 initializeChannelLookup();
                 renderChannels();
+            } else {
+                container.innerHTML = `
+                    <div class="loading">
+                        <p>Błąd ładowania danych kanałów. Sprawdź plik ${newScript.src}</p>
+                    </div>
+                `;
             }
         }, 100);
     };
     
     newScript.onerror = function() {
+        console.error('Błąd ładowania:', newScript.src);
         container.innerHTML = `
             <div class="loading">
-                <p>Błąd ładowania kanałów. Sprawdź czy plik ${newScript.src} istnieje.</p>
+                <p>Błąd ładowania kanałów. Plik ${newScript.src.split('?')[0]} nie istnieje.</p>
             </div>
         `;
     };
@@ -281,25 +369,38 @@ function toggleChannelSource() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    initializeChannelLookup();
+    if (checkExpiry()) return;
+    
+    setTimeout(() => {
+        if (typeof window.channelsData !== 'undefined') {
+            initializeChannelLookup();
+            renderChannels();
+        } else {
+            const container = document.getElementById('channelsContainer');
+            container.innerHTML = `
+                <div class="loading">
+                    <p>Błąd ładowania danych kanałów. Sprawdź plik channels.js</p>
+                </div>
+            `;
+        }
+    }, 200);
     
     window.addEventListener('popstate', handlePopState);
     
     const currentPath = window.location.pathname;
     if (currentPath !== '/' && currentPath !== '') {
         const channelId = currentPath.substring(1);
-        const channel = channelLookupById[channelId];
-        
-        if (channel && firstClickTracker.has(channelId)) {
-            showPlayer(channel.url, channel.name);
-        } else {
-            history.replaceState({}, 'zawixChannels', '/');
-        }
+        setTimeout(() => {
+            const channel = channelLookupById[channelId];
+            if (channel && firstClickTracker.has(channelId)) {
+                showPlayer(channel.url, channel.name);
+            } else {
+                history.replaceState({}, 'zawixChannels', '/');
+            }
+        }, 300);
     }
-
-    setTimeout(() => {
-        renderChannels();
-    }, 1000);
     
     document.getElementById('searchInput').addEventListener('input', filterChannels);
+    
+    setInterval(checkExpiry, 60000);
 });
