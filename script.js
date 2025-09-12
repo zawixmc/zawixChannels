@@ -7,6 +7,7 @@ const categories = {
 
 let channelLookupById = {};
 let firstClickTracker = new Set();
+let currentChannelSource = 'channels.js';
 
 const adLink = 'https://www.revenuecpmgate.com/edh6fisc?key=0c99a1d5fe8ce628e3dcaa38ebc0d01b';
 
@@ -19,7 +20,7 @@ function initializeChannelLookup() {
 function getQualityClass(quality) {
     const q = quality.toUpperCase();
     if (q.includes('ULTRA')) return 'quality-uhd';
-    if (q.includes('FULL')) return 'quality-fhd';
+    if (q.includes('SUPER')) return 'quality-shd';
     if (q.includes('HD')) return 'quality-hd';
     return 'quality-sd';
 }
@@ -221,6 +222,62 @@ function openInNewWindow(url, channelName) {
     } else {
         alert('Zablokowano wyskakujące okno. Proszę pozwolić na wyskakujące okna dla tej strony.');
     }
+}
+
+function toggleChannelSource() {
+    const oldScript = document.getElementById('channelsScript');
+    const btn = document.getElementById('altChannelsBtn');
+    const container = document.getElementById('channelsContainer');
+    
+    container.innerHTML = `
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Ładowanie kanałów...</p>
+        </div>
+    `;
+    
+    if (oldScript) {
+        oldScript.remove();
+    }
+    
+    if (typeof channelsData !== 'undefined') {
+        delete window.channelsData;
+    }
+    
+    const newScript = document.createElement('script');
+    newScript.id = 'channelsScript';
+    
+    if (currentChannelSource === 'channels.js') {
+        newScript.src = 'channels-thedaddy.js';
+        btn.textContent = 'DOMYŚLNE KANAŁY';
+        currentChannelSource = 'channels-thedaddy.js';
+    } else {
+        newScript.src = 'channels.js';
+        btn.textContent = 'ALTERNATYWNE KANAŁY';
+        currentChannelSource = 'channels.js';
+    }
+    
+    newScript.onload = function() {
+        channelLookupById = {};
+        firstClickTracker.clear();
+        
+        setTimeout(() => {
+            if (typeof channelsData !== 'undefined') {
+                initializeChannelLookup();
+                renderChannels();
+            }
+        }, 100);
+    };
+    
+    newScript.onerror = function() {
+        container.innerHTML = `
+            <div class="loading">
+                <p>Błąd ładowania kanałów. Sprawdź czy plik ${newScript.src} istnieje.</p>
+            </div>
+        `;
+    };
+    
+    document.head.appendChild(newScript);
 }
 
 document.addEventListener('DOMContentLoaded', function() {

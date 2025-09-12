@@ -1,70 +1,98 @@
-const channelsData = {
+window.channelsData = {
     1: [{
         "name": "Canal+ Sport 1",
-        "url": "https://thedaddy.top/embed/stream-48.php",
+        "url": "https://strumyk.net/embed/22",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
     2: [{
         "name": "Canal+ Sport 2",
-        "url": "https://thedaddy.top/embed/stream-73.php",
+        "url": "https://strumyk.net/embed/",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
     3: [{
         "name": "Canal+ Sport 3",
-        "url": "https://thedaddy.top/embed/stream-259.php",
+        "url": "https://strumyk.net/embed/796",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
     4: [{
-        "name": "Canal+ Sport 5",
-        "url": "https://thedaddy.top/embed/stream-75.php",
+        "name": "Canal+ Sport 4",
+        "url": "https://strumyk.net/embed/804",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
     5: [{
-        "name": "Eleven Sports 1",
-        "url": "https://thedaddy.top/embed/stream-71.php",
-        "country": "PL",
-        "language": "Polski",
-        "quality": "ULTRA HD"
-    }],
-    6: [{
-        "name": "Eleven Sports 2",
-        "url": "https://thedaddy.top/embed/stream-72.php",
-        "country": "PL",
-        "language": "Polski",
-        "quality": "ULTRA HD"
-    }],
-    7: [{
-        "name": "Eleven Sports 3",
-        "url": "https://thedaddy.top/embed/stream-428.php",
+        "name": "Canal+ Sport 5",
+        "url": "https://strumyk.net/embed/112",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
     8: [{
-        "name": "Polsat Sport 1",
-        "url": "https://thedaddy.top/embed/stream-47.php",
+        "name": "Eleven Sports 1",
+        "url": "https://strumyk.net/embed/574",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
     9: [{
-        "name": "Polsat Sport 2",
-        "url": "https://thedaddy.top/embed/stream-50.php",
+        "name": "Eleven Sports 2",
+        "url": "https://strumyk.net/embed/575",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
     10: [{
+        "name": "Eleven Sports 3",
+        "url": "https://strumyk.net/vip/78",
+        "country": "PL",
+        "language": "Polski",
+        "quality": "ULTRA HD"
+    }],
+    11: [{
+        "name": "Eleven Sports 4",
+        "url": "https://strumyk.net/vip/79",
+        "country": "PL",
+        "language": "Polski",
+        "quality": "ULTRA HD"
+    }],
+    12: [{
+        "name": "Polsat Sport 1",
+        "url": "https://strumyk.net/embed/134",
+        "country": "PL",
+        "language": "Polski",
+        "quality": "ULTRA HD"
+    }],
+    13: [{
+        "name": "Polsat Sport 2",
+        "url": "https://strumyk.net/embed/594",
+        "country": "PL",
+        "language": "Polski",
+        "quality": "ULTRA HD"
+    }],
+    14: [{
+        "name": "Polsat Sport Premium 1",
+        "url": "https://strumyk.net/embed/759",
+        "country": "PL",
+        "language": "Polski",
+        "quality": "SUPER HD"
+    }],
+    15: [{
+        "name": "Polsat Sport Premium 2",
+        "url": "https://strumyk.net/embed/760",
+        "country": "PL",
+        "language": "Polski",
+        "quality": "SUPER HD"
+    }],
+    16: [{
         "name": "TVP Sport",
-        "url": "https://thedaddy.top/embed/stream-128.php",
+        "url": "https://strumyk.net/embed/239",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"

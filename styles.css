@@ -149,7 +149,7 @@ h1 {
     box-shadow: 0 0 15px rgba(255, 0, 110, 0.5);
 }
 
-.quality-fhd {
+.quality-shd {
     background: linear-gradient(45deg, #3a86ff, #06ffa5);
     color: white;
     box-shadow: 0 0 15px rgba(58, 134, 255, 0.5);
@@ -315,6 +315,50 @@ h1 {
 .expiry-notice:hover {
     transform: scale(1.05);
     box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+}
+
+.header {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.alt-channels-btn {
+    position: absolute;
+    left: 20px;
+    padding: 12px 24px;
+    background: linear-gradient(45deg, #ff0080, #00ff80, #0080ff, #ff8000);
+    background-size: 400% 400%;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    animation: gradientShift 3s ease infinite;
+    box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+}
+
+.alt-channels-btn:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 8px 30px rgba(255, 0, 128, 0.8);
+    animation: gradientShift 0.5s ease infinite;
+}
+
+.alt-channels-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 10px rgba(255, 0, 128, 0.6);
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 @media (max-width: 768px) {
