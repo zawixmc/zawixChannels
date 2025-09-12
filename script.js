@@ -8,7 +8,7 @@ const categories = {
 let channelLookupById = {};
 let firstClickTracker = new Set();
 
-const adLink = 'https://www.profitableratecpm.com/edh6fisc?key=0c99a1d5fe8ce628e3dcaa38ebc0d01b';
+const adLink = 'https://www.revenuecpmgate.com/edh6fisc?key=0c99a1d5fe8ce628e3dcaa38ebc0d01b';
 
 function initializeChannelLookup() {
     Object.entries(channelsData).forEach(([id, channelArray]) => {
