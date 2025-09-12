@@ -5,12 +5,15 @@
   "scripts": {
     "start": "http-server ./ -p 80",
     "build": "echo Nothing",
-	"http": "zrok share reserved zawix"
+    "http": "zrok share reserved zawix"
   },
   "dependencies": {
     "http-server": "^14.1.1"
   },
   "engines": {
     "node": "22.x"
+  },
+  "devDependencies": {
+    "eslint": "^9.35.0"
   }
 }
