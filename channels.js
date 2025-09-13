@@ -34,7 +34,28 @@ window.channelsData = {
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
+    6: [{
+        "name": "Canal+ Extra 1",
+        "url": "https://strumyk.net/embed/7261",
+        "country": "PL",
+        "language": "Polski",
+        "quality": "ULTRA HD"
+    }],
+    7: [{
+        "name": "Canal+ Extra 2",
+        "url": "https://strumyk.net/embed/7263",
+        "country": "PL",
+        "language": "Polski",
+        "quality": "ULTRA HD"
+    }],
     8: [{
+        "name": "Canal+ Extra 3",
+        "url": "https://strumyk.net/embed/7265",
+        "country": "PL",
+        "language": "Polski",
+        "quality": "ULTRA HD"
+    }],
+    10: [{
         "name": "Eleven Sports 1",
         "url": "https://strumyk.net/vip/65",
         "url2": "https://strumyk.net/embed/574",
@@ -42,56 +63,56 @@ window.channelsData = {
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    9: [{
+    11: [{
         "name": "Eleven Sports 2",
         "url": "https://strumyk.net/embed/575",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    10: [{
+    12: [{
         "name": "Eleven Sports 3",
         "url": "https://strumyk.net/vip/78",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    11: [{
+    13: [{
         "name": "Eleven Sports 4",
         "url": "https://strumyk.net/vip/79",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    12: [{
+    14: [{
         "name": "Polsat Sport 1",
         "url": "https://strumyk.net/embed/134",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    13: [{
+    15: [{
         "name": "Polsat Sport 2",
         "url": "https://strumyk.net/embed/594",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
     }],
-    14: [{
+    16: [{
         "name": "Polsat Sport Premium 1",
         "url": "https://strumyk.net/embed/759",
         "country": "PL",
         "language": "Polski",
         "quality": "SUPER HD"
     }],
-    15: [{
+    17: [{
         "name": "Polsat Sport Premium 2",
         "url": "https://strumyk.net/embed/760",
         "country": "PL",
         "language": "Polski",
         "quality": "SUPER HD"
     }],
-    16: [{
+    18: [{
         "name": "TVP Sport",
         "url": "https://strumyk.net/embed/239",
         "country": "PL",
