@@ -36,7 +36,8 @@ window.channelsData = {
     }],
     8: [{
         "name": "Eleven Sports 1",
-        "url": "https://strumyk.net/embed/574",
+        "url": "https://strumyk.net/vip/65",
+        "url2": "https://strumyk.net/embed/574",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
