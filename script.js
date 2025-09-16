@@ -11,7 +11,7 @@ let currentChannelSource = 'channels.js';
 
 const adLink = 'https://www.revenuecpmgate.com/edh6fisc?key=0c99a1d5fe8ce628e3dcaa38ebc0d01b';
 
-const EXPIRY_DATE = new Date('2025-09-14T23:59:59');
+const EXPIRY_DATE = new Date('2025-10-16T13:25:34');
 
 function checkExpiry() {
     const now = new Date();
