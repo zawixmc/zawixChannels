@@ -46,7 +46,7 @@ function checkExpiry() {
                         font-size: 48px;
                         margin: 0 0 20px 0;
                         text-shadow: 0 0 20px #ff4444;
-                    ">⚠️ STRONA WYGASŁA</h1>
+                    ">⚠️ STRONA WYGASŁA ⚠️</h1>
                     <p style="
                         font-size: 24px;
                         margin: 0 0 20px 0;
