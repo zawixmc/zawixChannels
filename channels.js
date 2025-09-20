@@ -7,7 +7,7 @@ window.channelsData = {
         "quality": "ULTRA HD"
     }],
     2: [{
-        "name": "Canal+ Sport 2",
+        "name": "Canal+ Sport 2 NOT WORKING",
         "url": "https://strumyk.net/embed/",
         "country": "PL",
         "language": "Polski",
@@ -58,7 +58,6 @@ window.channelsData = {
     10: [{
         "name": "Eleven Sports 1",
         "url": "https://strumyk.net/vip/65",
-        "url2": "https://strumyk.net/embed/574",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
