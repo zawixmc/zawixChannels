@@ -1,7 +1,7 @@
 window.channelsData = {
     1: [{
         "name": "Canal+ Sport 1",
-        "url": "https://strumyk.net/embed/22",
+        "url": "https://strumyk.net/embed/22333",
         "country": "PL",
         "language": "Polski",
         "quality": "ULTRA HD"
