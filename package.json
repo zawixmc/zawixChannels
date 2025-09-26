@@ -4,7 +4,7 @@
   "description": "FREE CHANNELS",
   "scripts": {
     "start": "node server.js",
-    "install": "npm install express"
+    "install": "npm install express",
 	"build": "echo Build completed"
   },
   "dependencies": {
