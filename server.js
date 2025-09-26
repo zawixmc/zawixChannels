@@ -34,8 +34,9 @@ app.get('/styles.css', (req, res) => {
     res.sendFile(path.join(__dirname, 'styles.css'));
 });
 
-app.get('/firebase-config.js', (req, res) => {
-    res.sendFile(path.join(__dirname, 'firebase-config.js'));
+app.get('/firebase-config.mjs', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'firebase-config.mjs'));
 });
 
 app.get('/favicon.ico', (req, res) => {
