@@ -7,11 +7,19 @@ const categories = {
 
 let channelLookupById = {};
 let firstClickTracker = new Set();
-let currentChannelSource = 'channels.js';
 
 const adLink = 'https://www.revenuecpmgate.com/edh6fisc?key=0c99a1d5fe8ce628e3dcaa38ebc0d01b';
 
 const EXPIRY_DATE = new Date('2025-10-16T13:25:34');
+
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
 function checkExpiry() {
     const now = new Date();
@@ -97,6 +105,8 @@ function categorizeChannel(channelName) {
 }
 
 function playChannel(channelId, channelName, url, event) {
+    event.stopPropagation();
+    
     if (checkExpiry()) return;
     
     if (!firstClickTracker.has(channelId)) {
@@ -176,11 +186,22 @@ function handlePopState(event) {
         const channel = channelLookupById[channelId];
         
         if (channel && firstClickTracker.has(channelId)) {
-            showPlayer(channel.url, channel.name);
+            showPlayer(channel.url1, channel.name);
         } else {
             goBack();
         }
     }
+}
+
+function getAvailableUrls(channel) {
+    const urls = [];
+    for (let i = 1; i <= 10; i++) {
+        const urlKey = `url${i}`;
+        if (channel[urlKey]) {
+            urls.push({key: urlKey, url: channel[urlKey], number: i});
+        }
+    }
+    return urls;
 }
 
 function renderChannels(filteredData = null) {
@@ -210,14 +231,38 @@ function renderChannels(filteredData = null) {
         `;
         
         channels.forEach(channel => {
+            const availableUrls = getAvailableUrls(channel);
+            const escapedChannelName = escapeHtml(channel.name);
+            const escapedChannelId = escapeHtml(channel.id);
+            
             html += `
-                <div class="channel-card" onclick="playChannel('${channel.id}', '${channel.name}', '${channel.url}', event)">
+                <div class="channel-card">
                     <div class="channel-name">${channel.name}</div>
                     <div class="channel-info">
                         <span class="language">${channel.language}</span>
                         <span class="quality-badge ${getQualityClass(channel.quality)}">${channel.quality}</span>
                     </div>
-                    <button class="play-button">Oglądaj na żywo</button>
+                    <div class="channel-buttons">
+                        <button class="play-button" onclick="playChannel('${escapedChannelId}', '${escapedChannelName}', '${availableUrls[0]?.url || ''}', event)">Oglądaj na żywo</button>
+                        <div class="url-buttons">
+            `;
+            
+            if (availableUrls.length === 0) {
+                html += `<div class="no-channel-bar">Brak kanału</div>`;
+            } else {
+                for (let i = 0; i < availableUrls.length; i++) {
+                    if (i > 0 && i % 5 === 0) {
+                        html += `</div><div class="url-buttons">`;
+                    }
+                    const urlData = availableUrls[i];
+                    const escapedUrl = escapeHtml(urlData.url);
+                    html += `<button class="url-btn" onclick="playChannel('${escapedChannelId}', '${escapedChannelName}', '${escapedUrl}', event)">${urlData.number}</button>`;
+                }
+            }
+            
+            html += `
+                        </div>
+                    </div>
                 </div>
             `;
         });
@@ -300,74 +345,6 @@ function openInNewWindow(url, channelName) {
     }
 }
 
-function toggleChannelSource() {
-    if (checkExpiry()) return;
-    
-    const oldScript = document.getElementById('channelsScript');
-    const btn = document.getElementById('altChannelsBtn');
-    const container = document.getElementById('channelsContainer');
-    
-    container.innerHTML = `
-        <div class="loading">
-            <div class="spinner"></div>
-            <p>Ładowanie kanałów...</p>
-        </div>
-    `;
-    
-    if (oldScript) {
-        oldScript.remove();
-    }
-    
-    delete window.channelsData;
-    
-    const newScript = document.createElement('script');
-    newScript.id = 'channelsScript';
-    
-    if (currentChannelSource === 'channels.js') {
-        newScript.src = 'channels-thedaddy.js?' + Date.now();
-        btn.textContent = 'DOMYŚLNE KANAŁY';
-        currentChannelSource = 'channels-thedaddy.js';
-        console.log('Ładuję: channels-thedaddy.js');
-    } else {
-        newScript.src = 'channels.js?' + Date.now();
-        btn.textContent = 'ALTERNATYWNE KANAŁY';
-        currentChannelSource = 'channels.js';
-        console.log('Ładuję: channels.js');
-    }
-    
-    newScript.onload = function() {
-        console.log('Script załadowany:', newScript.src);
-        console.log('channelsData:', typeof window.channelsData !== 'undefined' ? Object.keys(window.channelsData).length + ' kanałów' : 'undefined');
-        
-        channelLookupById = {};
-        firstClickTracker.clear();
-        
-        setTimeout(() => {
-            if (typeof window.channelsData !== 'undefined') {
-                initializeChannelLookup();
-                renderChannels();
-            } else {
-                container.innerHTML = `
-                    <div class="loading">
-                        <p>Błąd ładowania danych kanałów. Sprawdź plik ${newScript.src}</p>
-                    </div>
-                `;
-            }
-        }, 100);
-    };
-    
-    newScript.onerror = function() {
-        console.error('Błąd ładowania:', newScript.src);
-        container.innerHTML = `
-            <div class="loading">
-                <p>Błąd ładowania kanałów. Plik ${newScript.src.split('?')[0]} nie istnieje.</p>
-            </div>
-        `;
-    };
-    
-    document.head.appendChild(newScript);
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     if (checkExpiry()) return;
     
@@ -393,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             const channel = channelLookupById[channelId];
             if (channel && firstClickTracker.has(channelId)) {
-                showPlayer(channel.url, channel.name);
+                showPlayer(channel.url1, channel.name);
             } else {
                 history.replaceState({}, 'zawixChannels', '/');
             }

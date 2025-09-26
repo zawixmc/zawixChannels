@@ -90,7 +90,7 @@ h1 {
     background-clip: padding-box;
     border-radius: 15px;
     padding: 1.5rem;
-    cursor: pointer;
+    cursor: default;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -110,6 +110,7 @@ h1 {
     mask-composite: subtract;
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
 .channel-card:hover::before {
@@ -126,6 +127,7 @@ h1 {
     font-weight: bold;
     margin-bottom: 0.5rem;
     color: #fff;
+    transform: translateZ(0);
 }
 
 .channel-info {
@@ -133,6 +135,7 @@ h1 {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    transform: translateZ(0);
 }
 
 .quality-badge {
@@ -171,6 +174,12 @@ h1 {
     color: #ccc;
 }
 
+.channel-buttons {
+    position: relative;
+    z-index: 10;
+    transform: none !important;
+}
+
 .play-button {
     background: linear-gradient(45deg, #ff006e, #8338ec);
     border: none;
@@ -183,11 +192,60 @@ h1 {
     width: 100%;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 11;
+    transform: none !important;
 }
 
 .play-button:hover {
-    transform: translateY(-2px);
+    transform: translateY(-2px) !important;
     box-shadow: 0 5px 20px rgba(255, 0, 110, 0.6);
+}
+
+.url-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0.5rem;
+    position: relative;
+    z-index: 10;
+    transform: none !important;
+}
+
+.url-btn {
+    background: linear-gradient(45deg, #3a86ff, #06ffa5);
+    border: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 15px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    min-width: 40px;
+    position: relative;
+    z-index: 11;
+    transform: none !important;
+}
+
+.url-btn:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 3px 15px rgba(58, 134, 255, 0.6);
+}
+
+.no-channel-bar {
+    background: rgba(108, 117, 125, 0.3);
+    border: 1px solid rgba(108, 117, 125, 0.5);
+    border-radius: 20px;
+    padding: 0.8rem 1.5rem;
+    text-align: center;
+    color: #ccc;
+    font-size: 0.9rem;
+    width: 100%;
+    margin-top: 0.5rem;
+    transform: none !important;
 }
 
 .search-container {
@@ -295,6 +353,8 @@ h1 {
 .expiry-notice {
     position: absolute;
     right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
     background: linear-gradient(45deg, #00d970, #0070d9, #d97000, #9d00d9, #d9d900);
     background-size: 400% 400%;
     color: white;
@@ -312,53 +372,11 @@ h1 {
     letter-spacing: 0.5px;
     animation: gradientShift 3s ease infinite;
 }
+
 .expiry-notice:hover {
-    transform: scale(1.05) translateY(-2px);
+    transform: translateY(-50%) scale(1.05) translateY(-2px);
     box-shadow: 0 8px 30px rgba(217, 0, 112, 0.8);
     animation: gradientShift 1.5s ease infinite;
-}
-
-.header {
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding: 2rem 0;
-}
-
-.header h1 {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
-}
-
-.alt-channels-btn {
-	left: 30px;
-    position: relative;
-    padding: 12px 24px;
-    background: linear-gradient(45deg, #00d970, #0070d9, #d97000, #9d00d9, #d9d900);
-    background-size: 400% 400%;
-    border: 2px solid transparent;
-    border-radius: 8px;
-    color: white;
-    font-weight: bold;
-    font-size: 14px;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    animation: gradientShift 3s ease infinite;
-    box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
-    display: inline-block;
-}
-.alt-channels-btn:hover {
-    transform: scale(1.05) translateY(-2px);
-    box-shadow: 0 8px 30px rgba(255, 0, 128, 0.8);
-    animation: gradientShift 1.5s ease infinite;
-}
-.alt-channels-btn:active {
-    transform: scale(0.98);
-    box-shadow: 0 2px 10px rgba(255, 0, 128, 0.6);
 }
 
 @keyframes gradientShift {
@@ -371,6 +389,13 @@ h1 {
     .expiry-notice {
         font-size: 10px;
         padding: 6px 12px;
+        position: static;
+        transform: none;
+        margin-top: 1rem;
+    }
+    
+    .expiry-notice:hover {
+        transform: scale(1.05) translateY(-2px);
     }
     
     .header {
@@ -379,36 +404,6 @@ h1 {
         padding: 1rem;
     }
     
-    .header h1 {
-        order: 1;
-        margin-bottom: 0;
-    }
-    
-    .alt-channels-btn {
-        order: 2;
-        font-size: 12px;
-        padding: 8px 16px;
-    }
-    
-    .expiry-notice {
-        order: 3;
-        position: static;
-    }
-}
-
-@media (max-width: 480px) {
-    .expiry-notice {
-        font-size: 9px;
-        padding: 5px 10px;
-    }
-    
-    .alt-channels-btn {
-        font-size: 10px;
-        padding: 6px 12px;
-    }
-}
-
-@media (max-width: 768px) {
     .channels-grid {
         grid-template-columns: 1fr;
     }
@@ -419,5 +414,22 @@ h1 {
     
     .container {
         padding: 1rem;
+    }
+    
+    .url-buttons {
+        gap: 0.3rem;
+    }
+    
+    .url-btn {
+        padding: 0.4rem 0.6rem;
+        min-width: 35px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .expiry-notice {
+        font-size: 9px;
+        padding: 5px 10px;
     }
 }
