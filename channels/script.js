@@ -453,9 +453,9 @@ function filterChannels() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM załadowany - inicjalizacja panelu admina');
     
-    const isAdminPage = window.location.pathname.includes('/channels/') || 
-                       window.location.pathname.endsWith('/channels.html') ||
-                       document.getElementById('loginView') !== null;
+	const isAdminPage = window.location.pathname === '/channels' || 
+					   window.location.pathname.endsWith('/channels.html') ||
+					   document.getElementById('loginView') !== null;
     
     if (!isAdminPage) {
         console.log('Nie jest to strona admina');
