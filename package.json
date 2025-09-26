@@ -1,10 +1,11 @@
 {
   "name": "zawixChannels",
-  "version": "1.4.9",
+  "version": "1.11.2",
   "description": "FREE CHANNELS",
   "scripts": {
     "start": "node server.js",
     "install": "npm install express"
+	"build": "echo Build completed"
   },
   "dependencies": {
     "express": "^5.1.0",
