@@ -1,6 +1,6 @@
 {
   "name": "zawixChannels",
-  "version": "1.0",
+  "version": "1.4.9",
   "description": "FREE CHANNELS",
   "scripts": {
     "start": "node server.js",
