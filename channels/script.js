@@ -10,6 +10,11 @@ const categories = {
     'Inne Kanały': ['TVP', 'MOTOWIZJA', 'Eurosport']
 };
 
+let sessionData = {
+    isLoggedIn: false,
+    loginTime: null
+};
+
 function escapeHtml(unsafe) {
     return unsafe
         .replace(/&/g, "&amp;")
@@ -17,36 +22,6 @@ function escapeHtml(unsafe) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-}
-
-function saveToLocalStorage(key, value) {
-    try {
-        localStorage.setItem(key, value);
-        return true;
-    } catch (error) {
-        console.error('Błąd zapisywania do localStorage:', error);
-        return false;
-    }
-}
-
-function getFromLocalStorage(key, defaultValue = null) {
-    try {
-        const value = localStorage.getItem(key);
-        return value !== null ? value : defaultValue;
-    } catch (error) {
-        console.error('Błąd odczytywania z localStorage:', error);
-        return defaultValue;
-    }
-}
-
-function removeFromLocalStorage(key) {
-    try {
-        localStorage.removeItem(key);
-        return true;
-    } catch (error) {
-        console.error('Błąd usuwania z localStorage:', error);
-        return false;
-    }
 }
 
 function initializeChannelLookup() {
@@ -104,14 +79,11 @@ function showError(message) {
 }
 
 function checkLoginStatus() {
-    const loginStatus = getFromLocalStorage('channelsAdminLoggedIn');
-    const loginTimestamp = getFromLocalStorage('channelsAdminLoginTime');
-    
     const currentTime = Date.now();
     const sessionDuration = 24 * 60 * 60 * 1000;
     
-    if (loginStatus === 'true' && loginTimestamp) {
-        const timeDiff = currentTime - parseInt(loginTimestamp);
+    if (sessionData.isLoggedIn && sessionData.loginTime) {
+        const timeDiff = currentTime - sessionData.loginTime;
         if (timeDiff < sessionDuration) {
             isLoggedIn = true;
             showAdminView();
@@ -152,7 +124,7 @@ function showAdminView() {
     }, 100);
 }
 
-async function login(event) {
+function login(event) {
     event.preventDefault();
     
     const loginInput = document.getElementById('loginInput');
@@ -167,34 +139,24 @@ async function login(event) {
     const login = loginInput.value.trim();
     const password = passwordInput.value.trim();
     
-    try {
-        errorDiv.textContent = 'Sprawdzanie danych logowania...';
+    if (login === 'admin' && password === 'Kzawix11') {
+        isLoggedIn = true;
+        const currentTime = Date.now();
         
-        const credentials = await window.channelsFirestore.getAdminCredentials();
+        sessionData.isLoggedIn = true;
+        sessionData.loginTime = currentTime;
         
-        if (login === credentials.username && password === credentials.password) {
-            isLoggedIn = true;
-            const currentTime = Date.now();
-            
-            saveToLocalStorage('channelsAdminLoggedIn', 'true');
-            saveToLocalStorage('channelsAdminLoginTime', currentTime.toString());
-            
-            errorDiv.textContent = '';
-            showAdminView();
-        } else {
-            errorDiv.textContent = 'Nieprawidłowy login lub hasło';
-        }
-    } catch (error) {
-        console.error('Błąd sprawdzania danych logowania:', error);
-        errorDiv.textContent = 'Błąd połączenia z bazą danych';
+        errorDiv.textContent = '';
+        showAdminView();
+    } else {
+        errorDiv.textContent = 'Nieprawidłowy login lub hasło';
     }
 }
 
 function logout() {
     isLoggedIn = false;
-    
-    removeFromLocalStorage('channelsAdminLoggedIn');
-    removeFromLocalStorage('channelsAdminLoginTime');
+    sessionData.isLoggedIn = false;
+    sessionData.loginTime = null;
     
     showLoginView();
     
@@ -208,10 +170,6 @@ function logout() {
 }
 
 function goToHome() {
-    if (isLoggedIn) {
-        saveToLocalStorage('channelsAdminLoggedIn', 'true');
-        saveToLocalStorage('channelsAdminLoginTime', Date.now().toString());
-    }
     window.location.href = '../index.html';
 }
 
@@ -511,8 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     setInterval(() => {
         if (isLoggedIn) {
-            saveToLocalStorage('channelsAdminLoggedIn', 'true');
-            saveToLocalStorage('channelsAdminLoginTime', Date.now().toString());
+            sessionData.loginTime = Date.now();
         }
     }, 5 * 60 * 1000);
 });
