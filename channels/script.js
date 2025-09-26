@@ -1,6 +1,7 @@
 let isLoggedIn = false;
 let currentEditingChannel = null;
 let channelLookupById = {};
+let channelsData = {};
 
 const categories = {
     'Canal+ Channels': ['Canal+'],
@@ -9,35 +10,10 @@ const categories = {
     'Inne Kanały': ['TVP', 'MOTOWIZJA', 'Eurosport']
 };
 
-function saveToLocalStorage(key, value) {
-    try {
-        localStorage.setItem(key, value);
-        return true;
-    } catch (error) {
-        console.error('Błąd zapisywania do localStorage:', error);
-        return false;
-    }
-}
-
-function getFromLocalStorage(key, defaultValue = null) {
-    try {
-        const value = localStorage.getItem(key);
-        return value !== null ? value : defaultValue;
-    } catch (error) {
-        console.error('Błąd odczytywania z localStorage:', error);
-        return defaultValue;
-    }
-}
-
-function removeFromLocalStorage(key) {
-    try {
-        localStorage.removeItem(key);
-        return true;
-    } catch (error) {
-        console.error('Błąd usuwania z localStorage:', error);
-        return false;
-    }
-}
+let sessionData = {
+    isLoggedIn: false,
+    loginTime: null
+};
 
 function escapeHtml(unsafe) {
     return unsafe
@@ -49,22 +25,65 @@ function escapeHtml(unsafe) {
 }
 
 function initializeChannelLookup() {
-    if (typeof window.channelsData !== 'undefined') {
+    if (channelsData && Object.keys(channelsData).length > 0) {
         Object.entries(channelsData).forEach(([id, channelArray]) => {
             channelLookupById[id] = channelArray[0];
         });
     }
 }
 
+async function loadChannelsFromFirestore() {
+    try {
+        showLoading();
+        const data = await window.channelsFirestore.getChannelsData();
+        channelsData = data;
+        window.channelsData = data;
+        initializeChannelLookup();
+        hideLoading();
+        return true;
+    } catch (error) {
+        console.error('Błąd ładowania kanałów z Firestore:', error);
+        showError('Błąd ładowania kanałów z bazy danych');
+        return false;
+    }
+}
+
+function showLoading() {
+    const container = document.getElementById('channelsContainer');
+    if (container) {
+        container.innerHTML = `
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Ładowanie kanałów...</p>
+            </div>
+        `;
+    }
+}
+
+function hideLoading() {
+    const loadingElement = document.querySelector('.loading');
+    if (loadingElement) {
+        loadingElement.remove();
+    }
+}
+
+function showError(message) {
+    const container = document.getElementById('channelsContainer');
+    if (container) {
+        container.innerHTML = `
+            <div class="loading">
+                <p style="color: #ff4444;">${message}</p>
+            </div>
+        `;
+    }
+}
+
 function checkLoginStatus() {
-    const loginStatus = getFromLocalStorage('channelsAdminLoggedIn');
-    const loginTimestamp = getFromLocalStorage('channelsAdminLoginTime');
-    
     const currentTime = Date.now();
     const sessionDuration = 24 * 60 * 60 * 1000;
     
-    if (loginStatus === 'true' && loginTimestamp) {
-        const timeDiff = currentTime - parseInt(loginTimestamp);
+    if (sessionData.isLoggedIn && sessionData.loginTime) {
+        const timeDiff = currentTime - sessionData.loginTime;
         if (timeDiff < sessionDuration) {
             isLoggedIn = true;
             showAdminView();
@@ -94,7 +113,8 @@ function showAdminView() {
     if (loginView) loginView.classList.add('hidden');
     if (adminView) adminView.classList.remove('hidden');
     
-    setTimeout(() => {
+    setTimeout(async () => {
+        await loadChannelsFromFirestore();
         renderChannels();
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
@@ -123,14 +143,11 @@ function login(event) {
         isLoggedIn = true;
         const currentTime = Date.now();
         
-        if (saveToLocalStorage('channelsAdminLoggedIn', 'true') && 
-            saveToLocalStorage('channelsAdminLoginTime', currentTime.toString())) {
-            
-            errorDiv.textContent = '';
-            showAdminView();
-        } else {
-            errorDiv.textContent = 'Błąd zapisywania sesji. Spróbuj ponownie.';
-        }
+        sessionData.isLoggedIn = true;
+        sessionData.loginTime = currentTime;
+        
+        errorDiv.textContent = '';
+        showAdminView();
     } else {
         errorDiv.textContent = 'Nieprawidłowy login lub hasło';
     }
@@ -138,9 +155,8 @@ function login(event) {
 
 function logout() {
     isLoggedIn = false;
-    
-    removeFromLocalStorage('channelsAdminLoggedIn');
-    removeFromLocalStorage('channelsAdminLoginTime');
+    sessionData.isLoggedIn = false;
+    sessionData.loginTime = null;
     
     showLoginView();
     
@@ -154,10 +170,6 @@ function logout() {
 }
 
 function goToHome() {
-    if (isLoggedIn) {
-        saveToLocalStorage('channelsAdminLoggedIn', 'true');
-        saveToLocalStorage('channelsAdminLoginTime', Date.now().toString());
-    }
     window.location.href = '../index.html';
 }
 
@@ -280,7 +292,7 @@ function updateDeleteButtons() {
     });
 }
 
-function saveChannel() {
+async function saveChannel() {
     if (!currentEditingChannel) return;
     
     const channelNameInput = document.getElementById('channelNameInput');
@@ -320,48 +332,27 @@ function saveChannel() {
         }
     });
     
-    if (typeof window.channelsData !== 'undefined') {
-        channelsData[currentEditingChannel.id] = [updatedChannel];
-        channelLookupById[currentEditingChannel.id] = updatedChannel;
-    }
+    channelsData[currentEditingChannel.id] = [updatedChannel];
+    channelLookupById[currentEditingChannel.id] = updatedChannel;
     
-    saveChannelsData();
-    closeEditModal();
-    renderChannels();
+    try {
+        await saveChannelsDataToFirestore();
+        closeEditModal();
+        renderChannels();
+        alert('Kanał został zaktualizowany w bazie danych!');
+    } catch (error) {
+        alert('Błąd zapisywania: ' + error.message);
+    }
 }
 
-function saveChannelsData() {
-    if (typeof window.channelsData === 'undefined') {
-        alert('Błąd: Brak danych kanałów do zapisania');
-        return;
+async function saveChannelsDataToFirestore() {
+    try {
+        await window.channelsFirestore.saveChannelsData(channelsData);
+        return true;
+    } catch (error) {
+        console.error('Błąd zapisywania do Firestore:', error);
+        throw error;
     }
-    
-    const channelsScript = `window.channelsData = ${JSON.stringify(channelsData, null, 4)};`;
-    
-    fetch('/save-channels', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content: channelsScript })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            alert('Plik channels.js został zaktualizowany!');
-        } else {
-            alert('Błąd: ' + (data.error || 'Nieznany błąd'));
-        }
-    })
-    .catch(error => {
-        console.error('Błąd:', error);
-        alert('Błąd zapisywania: ' + error.message);
-    });
 }
 
 function closeEditModal() {
@@ -371,7 +362,7 @@ function closeEditModal() {
 }
 
 function renderChannels(filteredData = null) {
-    if (!isLoggedIn || typeof window.channelsData === 'undefined') return;
+    if (!isLoggedIn || !channelsData || Object.keys(channelsData).length === 0) return;
     
     const container = document.getElementById('channelsContainer');
     if (!container) return;
@@ -427,7 +418,7 @@ function renderChannels(filteredData = null) {
 }
 
 function filterChannels() {
-    if (!isLoggedIn || typeof window.channelsData === 'undefined') return;
+    if (!isLoggedIn || !channelsData || Object.keys(channelsData).length === 0) return;
     
     const searchInput = document.getElementById('searchInput');
     if (!searchInput) return;
@@ -453,16 +444,14 @@ function filterChannels() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM załadowany - inicjalizacja panelu admina');
     
-	const isAdminPage = window.location.pathname === '/channels' || 
-					   window.location.pathname.endsWith('/channels.html') ||
-					   document.getElementById('loginView') !== null;
+    const isAdminPage = window.location.pathname === '/channels' || 
+                       window.location.pathname.endsWith('/channels.html') ||
+                       document.getElementById('loginView') !== null;
     
     if (!isAdminPage) {
         console.log('Nie jest to strona admina');
         return;
     }
-    
-    initializeChannelLookup();
     
     checkLoginStatus();
     
@@ -480,14 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     setInterval(() => {
         if (isLoggedIn) {
-            saveToLocalStorage('channelsAdminLoginTime', Date.now().toString());
+            sessionData.loginTime = Date.now();
         }
     }, 5 * 60 * 1000);
-});
-
-window.addEventListener('beforeunload', function() {
-    if (isLoggedIn) {
-        saveToLocalStorage('channelsAdminLoggedIn', 'true');
-        saveToLocalStorage('channelsAdminLoginTime', Date.now().toString());
-    }
 });

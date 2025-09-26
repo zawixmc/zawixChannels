@@ -7,6 +7,7 @@ const categories = {
 
 let channelLookupById = {};
 let firstClickTracker = new Set();
+let channelsData = {};
 
 const adLink = 'https://www.revenuecpmgate.com/edh6fisc?key=0c99a1d5fe8ce628e3dcaa38ebc0d01b';
 
@@ -79,6 +80,49 @@ function checkExpiry() {
         return true;
     }
     return false;
+}
+
+async function loadChannelsFromFirestore() {
+    try {
+        showLoading();
+        const data = await window.channelsFirestore.getChannelsData();
+        channelsData = data;
+        window.channelsData = data;
+        initializeChannelLookup();
+        hideLoading();
+        renderChannels();
+        return true;
+    } catch (error) {
+        console.error('Błąd ładowania kanałów z Firestore:', error);
+        showError('Błąd ładowania kanałów z bazy danych');
+        return false;
+    }
+}
+
+function showLoading() {
+    const container = document.getElementById('channelsContainer');
+    container.innerHTML = `
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Ładowanie kanałów...</p>
+        </div>
+    `;
+}
+
+function hideLoading() {
+    const loadingElement = document.querySelector('.loading');
+    if (loadingElement) {
+        loadingElement.remove();
+    }
+}
+
+function showError(message) {
+    const container = document.getElementById('channelsContainer');
+    container.innerHTML = `
+        <div class="loading">
+            <p style="color: #ff4444;">${message}</p>
+        </div>
+    `;
 }
 
 function initializeChannelLookup() {
@@ -356,15 +400,14 @@ function goToAdminPanel() {
 document.addEventListener('DOMContentLoaded', function() {
     if (checkExpiry()) return;
     
-    setTimeout(() => {
-        if (typeof window.channelsData !== 'undefined') {
-            initializeChannelLookup();
-            renderChannels();
+    setTimeout(async () => {
+        if (typeof window.channelsFirestore !== 'undefined') {
+            await loadChannelsFromFirestore();
         } else {
             const container = document.getElementById('channelsContainer');
             container.innerHTML = `
                 <div class="loading">
-                    <p>Błąd ładowania danych kanałów. Sprawdź plik channels.js</p>
+                    <p>Błąd ładowania Firebase. Sprawdź konfigurację.</p>
                 </div>
             `;
         }
@@ -385,7 +428,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     }
     
-    document.getElementById('searchInput').addEventListener('input', filterChannels);
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', filterChannels);
+    }
     
     setInterval(checkExpiry, 60000);
 });

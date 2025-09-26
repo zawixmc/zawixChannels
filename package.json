@@ -4,12 +4,12 @@
   "description": "FREE CHANNELS",
   "scripts": {
     "start": "node server.js",
-    "install": "npm install express",
-	"build": "echo Build completed"
+    "install": "npm install express firebase",
+    "build": "echo Build completed"
   },
   "dependencies": {
     "express": "^5.1.0",
-    "http-server": "^14.1.1"
+    "firebase": "^10.14.1"
   },
   "engines": {
     "node": "22.x"
