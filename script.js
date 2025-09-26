@@ -258,7 +258,7 @@ function renderChannels(filteredData = null) {
                     }
                     const urlData = availableUrls[i];
                     const escapedUrl = escapeHtml(urlData.url);
-                    html += `<button class="url-btn" onclick="playChannel('${escapedChannelId}', '${escapedChannelName}', '${escapedUrl}', event)">SRV ${urlData.number}</button>`;
+                    html += `<button class="url-btn" onclick="playChannel('${escapedChannelId}', '${escapedChannelName}', '${escapedUrl}', event)">L ${urlData.number}</button>`;
                 }
             }
             
