@@ -16,12 +16,13 @@ const db = getFirestore(app);
 
 class ChannelsFirestore {
   constructor() {
-    this.docRef = doc(db, 'channels', 'data');
+    this.channelsDocRef = doc(db, 'channels', 'data');
+    this.adminDocRef = doc(db, 'admin', 'credentials');
   }
 
   async getChannelsData() {
     try {
-      const docSnap = await getDoc(this.docRef);
+      const docSnap = await getDoc(this.channelsDocRef);
       if (docSnap.exists()) {
         return docSnap.data().channelsData;
       } else {
@@ -31,6 +32,13 @@ class ChannelsFirestore {
             "url1": "https://sportio.cc/ssic/22",
             "url2": "https://strumyk.net/embed/22333",
             "url3": "https://thedaddy.top/embed/stream-48.php",
+            "country": "PL",
+            "language": "Polski",
+            "quality": "ULTRA HD"
+          2: [{
+            "name": "Eleven Sports 1",
+            "url1": "https://strumyk.net/vip/65",
+            "url2": "https://thedaddy.top/embed/stream-71.php",
             "country": "PL",
             "language": "Polski",
             "quality": "ULTRA HD"
@@ -47,10 +55,39 @@ class ChannelsFirestore {
 
   async saveChannelsData(channelsData) {
     try {
-      await setDoc(this.docRef, { channelsData }, { merge: true });
+      await setDoc(this.channelsDocRef, { channelsData }, { merge: true });
       return true;
     } catch (error) {
       console.error('Błąd zapisywania danych do Firestore:', error);
+      throw error;
+    }
+  }
+
+  async getAdminCredentials() {
+    try {
+      const docSnap = await getDoc(this.adminDocRef);
+      if (docSnap.exists()) {
+        return docSnap.data();
+      } else {
+        const defaultCredentials = {
+          username: "admin",
+          password: "Kzawix11"
+        };
+        await this.saveAdminCredentials(defaultCredentials);
+        return defaultCredentials;
+      }
+    } catch (error) {
+      console.error('Błąd pobierania danych logowania z Firestore:', error);
+      throw error;
+    }
+  }
+
+  async saveAdminCredentials(credentials) {
+    try {
+      await setDoc(this.adminDocRef, credentials, { merge: true });
+      return true;
+    } catch (error) {
+      console.error('Błąd zapisywania danych logowania do Firestore:', error);
       throw error;
     }
   }
