@@ -181,6 +181,8 @@ function handlePopState(event) {
     
     if (path === '/' || path === '') {
         goBack();
+    } else if (path === '/channels') {
+        window.location.href = '/channels.html';
     } else {
         const channelId = path.substring(1);
         const channel = channelLookupById[channelId];
@@ -345,6 +347,12 @@ function openInNewWindow(url, channelName) {
     }
 }
 
+function goToAdminPanel() {
+    if (checkExpiry()) return;
+    
+    window.location.href = '/channels';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     if (checkExpiry()) return;
     
@@ -365,7 +373,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('popstate', handlePopState);
     
     const currentPath = window.location.pathname;
-    if (currentPath !== '/' && currentPath !== '') {
+    if (currentPath !== '/' && currentPath !== '' && currentPath !== '/channels') {
         const channelId = currentPath.substring(1);
         setTimeout(() => {
             const channel = channelLookupById[channelId];

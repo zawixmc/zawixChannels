@@ -3,11 +3,11 @@
   "version": "1.0",
   "description": "FREE CHANNELS",
   "scripts": {
-    "start": "http-server ./ -p 80",
-    "build": "echo Nothing",
-    "http": "zrok share reserved zawix"
+    "start": "node server.js",
+    "install": "npm install express"
   },
   "dependencies": {
+    "express": "^5.1.0",
     "http-server": "^14.1.1"
   },
   "engines": {
